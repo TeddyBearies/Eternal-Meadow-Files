@@ -1,218 +1,280 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Eternal Meadow Files</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: #f4f4f9;
-      color: #333;
-      margin: 0;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    h1 {
-      font-size: 2.5rem;
-      color: #2c3e50;
-      margin-bottom: 1rem;
-    }
-    h2 {
-      margin-top: 2rem;
-      font-size: 1.8rem;
-      color: #444;
-      border-bottom: 2px solid #ddd;
-      padding-bottom: 0.3rem;
-      width: 100%;
-      max-width: 800px;
-    }
-    .section {
-      max-width: 800px;
-      width: 100%;
-      margin-bottom: 2rem;
-    }
-    .instructions {
-      font-size: 0.9rem;
-      background: #fff8dc;
-      padding: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      margin-bottom: 1.5rem;
-    }
-    .box {
-      min-height: 100px;
-      border: 2px dashed #ccc;
-      border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      background: #fff;
-    }
-    .file-item {
-      background: #e6f7ff;
-      padding: 0.5rem 1rem;
-      margin: 0.3rem 0;
-      border-radius: 6px;
-      cursor: grab;
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-      max-width: 800px;
-      width: 100%;
-    }
-    li {
-      background: #fff;
-      margin: 0.5rem 0;
-      padding: 1rem;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-      transition: box-shadow 0.3s ease;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    li:hover {
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    }
-    .file-name {
-      cursor: pointer;
-      color: #007acc;
-      font-weight: 600;
-    }
-    .copied {
-      background: #dff0d8;
-      color: #3c763d;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 0.8rem;
-      display: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Eternal Meadow Files</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        h2 {
+            margin-top: 2rem;
+            font-size: 1.8rem;
+            color: #444;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 0.3rem;
+            width: 100%;
+            max-width: 800px;
+        }
+        .section {
+            max-width: 800px;
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+        .instructions {
+            font-size: 0.9rem;
+            background: #fff8dc;
+            padding: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+        }
+        .box {
+            min-height: 100px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: #fff;
+        }
+        .file-item {
+            background: #e6f7ff;
+            padding: 0.5rem 1rem;
+            margin: 0.3rem 0;
+            border-radius: 6px;
+            cursor: grab;
+            display: flex; /* Added for layout of text and copied message */
+            justify-content: space-between; /* Added for layout of text and copied message */
+            align-items: center; /* Added for layout of text and copied message */
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            max-width: 800px;
+            width: 100%;
+        }
+        li {
+            background: #fff;
+            margin: 0.5rem 0;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            transition: box-shadow 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        li:hover {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        .file-name {
+            cursor: pointer;
+            color: #007acc;
+            font-weight: 600;
+            flex-grow: 1; /* Allows it to take available space */
+        }
+        .copied {
+            background: #dff0d8;
+            color: #3c763d;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            display: none; /* Initially hidden */
+            margin-left: 10px; /* Space between name and message */
+        }
+    </style>
 </head>
 <body>
-  <h1>Eternal Meadow Files</h1>
+    <h1>Eternal Meadow Files</h1>
 
-  <div class="instructions">
-    <strong>Instructions:</strong><br>
-    All audio files are listed below. Drag and drop them into either the <strong>Duas</strong> or <strong>Sound Effects</strong> section.<br>
-    Your selections will be saved automatically and remembered next time.<br>
-    Photos and Videos will auto-fill below.
-  </div>
+    <div class="instructions">
+        <strong>Instructions:</strong><br>
+        All audio files are listed below. Drag and drop them into either the <strong>Duas</strong> or <strong>Sound Effects</strong> section.<br>
+        Your selections will be saved automatically and remembered next time.<br>
+        Photos and Videos will auto-fill below.
+    </div>
 
-  <div class="section">
-    <h2>🎵 All Audio Files</h2>
-    <div id="audio-pool" class="box"></div>
-  </div>
+    <div class="section">
+        <h2>🎵 All Audio Files</h2>
+        <div id="audio-pool" class="box"></div>
+    </div>
 
-  <div class="section">
-    <h2>🤲 Duas</h2>
-    <div id="duas-box" class="box" ondrop="drop(event, 'duas')" ondragover="allowDrop(event)"></div>
-  </div>
+    <div class="section">
+        <h2>🤲 Duas</h2>
+        <div id="duas-box" class="box" ondrop="drop(event, 'duas')" ondragover="allowDrop(event)"></div>
+    </div>
 
-  <div class="section">
-    <h2>🔊 Sound Effects</h2>
-    <div id="soundfx-box" class="box" ondrop="drop(event, 'soundfx')" ondragover="allowDrop(event)"></div>
-  </div>
+    <div class="section">
+        <h2>🔊 Sound Effects</h2>
+        <div id="soundfx-box" class="box" ondrop="drop(event, 'soundfx')" ondragover="allowDrop(event)"></div>
+    </div>
 
-  <div class="section">
-    <h2>🖼️ Photo Gallery</h2>
-    <ul id="photos-list"></ul>
-  </div>
+    <div class="section">
+        <h2>🖼️ Photo Gallery</h2>
+        <ul id="photos-list"></ul>
+    </div>
 
-  <div class="section">
-    <h2>🎞️ Video Clips</h2>
-    <ul id="videos-list"></ul>
-  </div>
+    <div class="section">
+        <h2>🎞️ Video Clips</h2>
+        <ul id="videos-list"></ul>
+    </div>
 
-  <script>
-    const repoAPI = "https://api.github.com/repos/TeddyBearies/Eternal-Meadow-Files/contents/";
-    const baseURL = "https://teddybearies.github.io/Eternal-Meadow-Files/";
-    let categories = JSON.parse(localStorage.getItem('audioCategories') || '{"duas": [], "soundfx": []}');
-    let audioFiles = [];
+    <script>
+        const repoAPI = "https://api.github.com/repos/TeddyBearies/Eternal-Meadow-Files/contents/";
+        const baseURL = "https://teddybearies.github.io/Eternal-Meadow-Files/";
+        let categories = JSON.parse(localStorage.getItem('audioCategories') || '{"duas": [], "soundfx": []}');
+        let audioFiles = [];
 
-    function allowDrop(e) {
-      e.preventDefault();
-    }
-
-    function drop(e, targetBox) {
-      e.preventDefault();
-      const file = e.dataTransfer.getData("text");
-      for (let cat in categories) {
-        categories[cat] = categories[cat].filter(f => f !== file);
-      }
-      categories[targetBox].push(file);
-      localStorage.setItem('audioCategories', JSON.stringify(categories));
-      renderAudio();
-    }
-
-    function dragStart(e) {
-      e.dataTransfer.setData("text", e.target.id);
-    }
-
-    function renderAudio() {
-      const allBox = document.getElementById("audio-pool");
-      const duasBox = document.getElementById("duas-box");
-      const fxBox = document.getElementById("soundfx-box");
-      allBox.innerHTML = duasBox.innerHTML = fxBox.innerHTML = "";
-
-      audioFiles.forEach(file => {
-        const item = document.createElement("div");
-        item.className = "file-item";
-        item.id = file.name;
-        item.textContent = decodeURIComponent(file.name);
-        item.draggable = true;
-        item.onclick = () => navigator.clipboard.writeText(baseURL + file.name);
-        item.ondragstart = dragStart;
-
-        if (categories.duas.includes(file.name)) {
-          duasBox.appendChild(item);
-        } else if (categories.soundfx.includes(file.name)) {
-          fxBox.appendChild(item);
-        } else {
-          allBox.appendChild(item);
+        function allowDrop(e) {
+            e.preventDefault();
         }
-      });
-    }
 
-    function renderOther(files) {
-      const photoList = document.getElementById("photos-list");
-      const videoList = document.getElementById("videos-list");
-
-      files.forEach(file => {
-        const ext = file.name.split('.').pop().toLowerCase();
-        const name = decodeURIComponent(file.name);
-        const url = baseURL + file.name;
-        const li = document.createElement("li");
-
-        const link = document.createElement("span");
-        link.className = "file-name";
-        link.textContent = name;
-        link.onclick = () => navigator.clipboard.writeText(url);
-
-        const copied = document.createElement("span");
-        copied.className = "copied";
-        copied.textContent = "Copied!";
-
-        li.appendChild(link);
-        li.appendChild(copied);
-
-        if (["jpg", "jpeg", "png", "gif", "webp"].includes(ext)) {
-          photoList.appendChild(li);
-        } else if (["mp4", "mov", "webm"].includes(ext)) {
-          videoList.appendChild(li);
+        function drop(e, targetBox) {
+            e.preventDefault();
+            const file = e.dataTransfer.getData("text");
+            // Remove file from its current category
+            for (let cat in categories) {
+                categories[cat] = categories[cat].filter(f => f !== file);
+            }
+            // Add file to the new category
+            categories[targetBox].push(file);
+            localStorage.setItem('audioCategories', JSON.stringify(categories));
+            renderAudio(); // Re-render to reflect changes
         }
-      });
-    }
 
-    fetch(repoAPI)
-      .then(res => res.json())
-      .then(files => {
-        audioFiles = files.filter(f => f.name.toLowerCase().endsWith(".mp3"));
-        renderAudio();
-        renderOther(files);
-      });
-  </script>
+        function dragStart(e) {
+            e.dataTransfer.setData("text", e.target.id);
+        }
+
+        function renderAudio() {
+            const allBox = document.getElementById("audio-pool");
+            const duasBox = document.getElementById("duas-box");
+            const fxBox = document.getElementById("soundfx-box");
+            // Clear boxes before re-rendering
+            allBox.innerHTML = '';
+            duasBox.innerHTML = '';
+            fxBox.innerHTML = '';
+
+            audioFiles.forEach(file => {
+                const item = document.createElement("div");
+                item.className = "file-item";
+                item.id = file.name; // Use file.name as ID for drag/drop data
+                item.draggable = true;
+                item.ondragstart = dragStart;
+
+                const fileNameSpan = document.createElement("span");
+                fileNameSpan.className = "file-name";
+                fileNameSpan.textContent = decodeURIComponent(file.name);
+                item.appendChild(fileNameSpan);
+
+                const copiedMessage = document.createElement("span");
+                copiedMessage.className = "copied";
+                copiedMessage.textContent = "Copied!";
+                item.appendChild(copiedMessage);
+
+                // Click handler for copying URL
+                fileNameSpan.onclick = async () => {
+                    try {
+                        await navigator.clipboard.writeText(baseURL + file.name);
+                        copiedMessage.style.display = 'inline'; // Show message
+                        setTimeout(() => {
+                            copiedMessage.style.display = 'none'; // Hide after delay
+                        }, 1500); // 1.5 seconds
+                    } catch (err) {
+                        console.error('Failed to copy audio URL: ', err);
+                        // Optionally: alert user or show a temporary error message
+                    }
+                };
+
+                // Place item into its correct category
+                if (categories.duas.includes(file.name)) {
+                    duasBox.appendChild(item);
+                } else if (categories.soundfx.includes(file.name)) {
+                    fxBox.appendChild(item);
+                } else {
+                    allBox.appendChild(item);
+                }
+            });
+        }
+
+        function renderOther(files) {
+            const photoList = document.getElementById("photos-list");
+            const videoList = document.getElementById("videos-list");
+            // Clear lists before re-rendering (important if this function could be called multiple times)
+            photoList.innerHTML = '';
+            videoList.innerHTML = '';
+
+            files.forEach(file => {
+                const ext = file.name.split('.').pop().toLowerCase();
+                const name = decodeURIComponent(file.name);
+                const url = baseURL + file.name;
+                const li = document.createElement("li");
+
+                const link = document.createElement("span");
+                link.className = "file-name";
+                link.textContent = name;
+                li.appendChild(link);
+
+                const copied = document.createElement("span");
+                copied.className = "copied";
+                copied.textContent = "Copied!";
+                li.appendChild(copied);
+
+                // Click handler for copying URL
+                link.onclick = async () => {
+                    try {
+                        await navigator.clipboard.writeText(url);
+                        copied.style.display = 'inline'; // Show message
+                        setTimeout(() => {
+                            copied.style.display = 'none'; // Hide after delay
+                        }, 1500); // 1.5 seconds
+                    } catch (err) {
+                        console.error('Failed to copy file URL: ', err);
+                        // Optionally: alert user or show a temporary error message
+                    }
+                };
+
+                if (["jpg", "jpeg", "png", "gif", "webp"].includes(ext)) {
+                    photoList.appendChild(li);
+                } else if (["mp4", "mov", "webm"].includes(ext)) {
+                    videoList.appendChild(li);
+                }
+            });
+        }
+
+        // Fetch files from GitHub API and initialize rendering
+        fetch(repoAPI)
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`GitHub API error: ${res.status} ${res.statusText}`);
+                }
+                return res.json();
+            })
+            .then(files => {
+                // Filter audio files (MP3s) for categorization
+                audioFiles = files.filter(f => f.name.toLowerCase().endsWith(".mp3"));
+                renderAudio(); // Render audio files based on saved categories
+
+                // Render other media types (photos, videos)
+                renderOther(files);
+            })
+            .catch(error => {
+                console.error("Error fetching repository contents:", error);
+                // Optionally display an error message to the user on the page
+                document.body.insertAdjacentHTML('beforeend', `<p style="color: red;">Error loading files: ${error.message}. Please try again later.</p>`);
+            });
+    </script>
 </body>
 </html>
