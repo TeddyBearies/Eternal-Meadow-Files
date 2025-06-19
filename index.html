@@ -56,6 +56,39 @@
       border-radius: 6px;
       cursor: grab;
     }
+    ul {
+      list-style: none;
+      padding: 0;
+      max-width: 800px;
+      width: 100%;
+    }
+    li {
+      background: #fff;
+      margin: 0.5rem 0;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      transition: box-shadow 0.3s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    li:hover {
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+    .file-name {
+      cursor: pointer;
+      color: #007acc;
+      font-weight: 600;
+    }
+    .copied {
+      background: #dff0d8;
+      color: #3c763d;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -64,7 +97,8 @@
   <div class="instructions">
     <strong>Instructions:</strong><br>
     All audio files are listed below. Drag and drop them into either the <strong>Duas</strong> or <strong>Sound Effects</strong> section.<br>
-    Your selections will be saved automatically and remembered next time.
+    Your selections will be saved automatically and remembered next time.<br>
+    Photos and Videos will auto-fill below.
   </div>
 
   <div class="section">
@@ -82,10 +116,21 @@
     <div id="soundfx-box" class="box" ondrop="drop(event, 'soundfx')" ondragover="allowDrop(event)"></div>
   </div>
 
+  <div class="section">
+    <h2>🖼️ Photo Gallery</h2>
+    <ul id="photos-list"></ul>
+  </div>
+
+  <div class="section">
+    <h2>🎞️ Video Clips</h2>
+    <ul id="videos-list"></ul>
+  </div>
+
   <script>
     const repoAPI = "https://api.github.com/repos/TeddyBearies/Eternal-Meadow-Files/contents/";
     const baseURL = "https://teddybearies.github.io/Eternal-Meadow-Files/";
     let categories = JSON.parse(localStorage.getItem('audioCategories') || '{"duas": [], "soundfx": []}');
+    let audioFiles = [];
 
     function allowDrop(e) {
       e.preventDefault();
@@ -94,23 +139,19 @@
     function drop(e, targetBox) {
       e.preventDefault();
       const file = e.dataTransfer.getData("text");
-
-      // remove from all
       for (let cat in categories) {
         categories[cat] = categories[cat].filter(f => f !== file);
       }
-
-      // add to new
       categories[targetBox].push(file);
       localStorage.setItem('audioCategories', JSON.stringify(categories));
-      renderItems();
+      renderAudio();
     }
 
     function dragStart(e) {
       e.dataTransfer.setData("text", e.target.id);
     }
 
-    function renderItems() {
+    function renderAudio() {
       const allBox = document.getElementById("audio-pool");
       const duasBox = document.getElementById("duas-box");
       const fxBox = document.getElementById("soundfx-box");
@@ -135,12 +176,42 @@
       });
     }
 
-    let audioFiles = [];
+    function renderOther(files) {
+      const photoList = document.getElementById("photos-list");
+      const videoList = document.getElementById("videos-list");
+
+      files.forEach(file => {
+        const ext = file.name.split('.').pop().toLowerCase();
+        const name = decodeURIComponent(file.name);
+        const url = baseURL + file.name;
+        const li = document.createElement("li");
+
+        const link = document.createElement("span");
+        link.className = "file-name";
+        link.textContent = name;
+        link.onclick = () => navigator.clipboard.writeText(url);
+
+        const copied = document.createElement("span");
+        copied.className = "copied";
+        copied.textContent = "Copied!";
+
+        li.appendChild(link);
+        li.appendChild(copied);
+
+        if (["jpg", "jpeg", "png", "gif", "webp"].includes(ext)) {
+          photoList.appendChild(li);
+        } else if (["mp4", "mov", "webm"].includes(ext)) {
+          videoList.appendChild(li);
+        }
+      });
+    }
+
     fetch(repoAPI)
       .then(res => res.json())
       .then(files => {
         audioFiles = files.filter(f => f.name.toLowerCase().endsWith(".mp3"));
-        renderItems();
+        renderAudio();
+        renderOther(files);
       });
   </script>
 </body>
