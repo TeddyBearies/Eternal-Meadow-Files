@@ -52,6 +52,7 @@
       border-radius: 8px;
       border: 1px solid #ddd;
       transition: box-shadow 0.3s ease;
+      position: relative;
     }
 
     li:hover {
@@ -64,6 +65,7 @@
       font-weight: 600;
       display: flex;
       align-items: center;
+      cursor: pointer;
     }
 
     a::before {
@@ -75,6 +77,19 @@
     .soundfx a::before { content: '🔊'; }
     .video a::before { content: '🎞️'; }
     .photo a::before { content: '🖼️'; }
+
+    .copied {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #dff0d8;
+      color: #3c763d;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      display: none;
+    }
 
     @media (max-width: 600px) {
       body {
@@ -90,24 +105,47 @@
 
   <h3>🤲 Duas</h3>
   <ul>
-    <li class="duas"><a href="Al-Fatiha_%2001.mp3">Al-Fatiha 01</a></li>
-    <!-- Add more duas here -->
+    <li class="duas">
+      <a onclick="copyLink(this)" data-file="Al-Fatiha_%2001.mp3">Al-Fatiha 01</a>
+      <span class="copied">Copied!</span>
+    </li>
   </ul>
 
   <h3>🔊 Sound Effects</h3>
   <ul>
-    <li class="soundfx"><a href="Campfire%20Sound%20Effect.mp3">Campfire Sound Effect</a></li>
-    <!-- Add more sound effects here -->
+    <li class="soundfx">
+      <a onclick="copyLink(this)" data-file="Campfire%20Sound%20Effect.mp3">Campfire Sound Effect</a>
+      <span class="copied">Copied!</span>
+    </li>
   </ul>
 
   <h2>🖼️ Photo Gallery</h2>
   <ul>
-    <li class="photo"><a href="your-photo.jpg">Your Photo Name</a></li>
+    <li class="photo">
+      <a onclick="copyLink(this)" data-file="your-photo.jpg">Your Photo Name</a>
+      <span class="copied">Copied!</span>
+    </li>
   </ul>
 
   <h2>🎞️ Video Clips</h2>
   <ul>
-    <li class="video"><a href="your-video.mp4">Your Video Name</a></li>
+    <li class="video">
+      <a onclick="copyLink(this)" data-file="your-video.mp4">Your Video Name</a>
+      <span class="copied">Copied!</span>
+    </li>
   </ul>
+
+  <script>
+    function copyLink(el) {
+      const file = el.getAttribute("data-file");
+      const base = "https://teddybearies.github.io/Eternal-Meadow-Files/";
+      const fullLink = base + file;
+      navigator.clipboard.writeText(fullLink).then(() => {
+        const copied = el.nextElementSibling;
+        copied.style.display = "inline-block";
+        setTimeout(() => { copied.style.display = "none"; }, 1500);
+      });
+    }
+  </script>
 </body>
 </html>
