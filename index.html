@@ -1,14 +1,113 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>My Audio Files</title>
+  <title>Eternal Meadow Files</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: #f4f4f9;
+      color: #333;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #2c3e50;
+    }
+
+    h2 {
+      margin-top: 2.5rem;
+      font-size: 1.8rem;
+      color: #444;
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 0.2rem;
+      width: 100%;
+      max-width: 700px;
+    }
+
+    h3 {
+      margin-top: 1.5rem;
+      font-size: 1.4rem;
+      color: #555;
+      margin-bottom: 0.5rem;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      max-width: 700px;
+      width: 100%;
+    }
+
+    li {
+      background: #fff;
+      margin: 0.5rem 0;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      transition: box-shadow 0.3s ease;
+    }
+
+    li:hover {
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    a {
+      text-decoration: none;
+      color: #007acc;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+
+    a::before {
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+
+    .duas a::before { content: '🤲'; }
+    .soundfx a::before { content: '🔊'; }
+    .video a::before { content: '🎞️'; }
+    .photo a::before { content: '🖼️'; }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>My Audio Files</h1>
+  <h1>Eternal Meadow Files</h1>
+
+  <h2>🎵 Audio Files</h2>
+
+  <h3>🤲 Duas</h3>
   <ul>
-    <li><a href="Al-Fatiha_%2001.mp3">Al-Fatiha 01</a></li>
-    <li><a href="Campfire%20Sound%20Effect.mp3">Campfire Sound Effect</a></li>
+    <li class="duas"><a href="Al-Fatiha_%2001.mp3">Al-Fatiha 01</a></li>
+    <!-- Add more duas here -->
+  </ul>
+
+  <h3>🔊 Sound Effects</h3>
+  <ul>
+    <li class="soundfx"><a href="Campfire%20Sound%20Effect.mp3">Campfire Sound Effect</a></li>
+    <!-- Add more sound effects here -->
+  </ul>
+
+  <h2>🖼️ Photo Gallery</h2>
+  <ul>
+    <li class="photo"><a href="your-photo.jpg">Your Photo Name</a></li>
+  </ul>
+
+  <h2>🎞️ Video Clips</h2>
+  <ul>
+    <li class="video"><a href="your-video.mp4">Your Video Name</a></li>
   </ul>
 </body>
 </html>
