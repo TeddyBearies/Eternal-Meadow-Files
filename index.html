@@ -209,16 +209,18 @@
             min-width: 280px; /* Minimum width for each box */
         }
 
-        /* Photos & Videos in Grid Layout */
+        /* Photos, Videos, & PDFs in Grid Layout */
         .layout-grid #photos-list,
-        .layout-grid #videos-list {
+        .layout-grid #videos-list,
+        .layout-grid #pdfs-list { /* Added #pdfs-list here */
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Responsive grid columns */
             gap: 1rem; /* Space between grid items */
         }
 
         .layout-grid #photos-list li,
-        .layout-grid #videos-list li {
+        .layout-grid #videos-list li,
+        .layout-grid #pdfs-list li { /* Added #pdfs-list li here */
             flex-direction: column; /* Stack name and copied message vertically */
             text-align: center;
             padding: 0.8rem; /* Slightly less padding for denser grid */
@@ -226,7 +228,8 @@
         }
 
         .layout-grid #photos-list li .file-name,
-        .layout-grid #videos-list li .file-name {
+        .layout-grid #videos-list li .file-name,
+        .layout-grid #pdfs-list li .file-name { /* Added for PDF file name */
             margin-bottom: 0.5rem; /* Space between name and copied message */
         }
 
@@ -262,7 +265,8 @@
             }
 
             .layout-grid #photos-list,
-            .layout-grid #videos-list {
+            .layout-grid #videos-list,
+            .layout-grid #pdfs-list {
                 grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* Smaller grid items */
             }
         }
@@ -308,6 +312,11 @@
     <div class="section">
         <h2>🎞️ Video Clips</h2>
         <ul id="videos-list"></ul>
+    </div>
+
+    <div class="section">
+        <h2>📄 PDF Documents</h2>
+        <ul id="pdfs-list"></ul>
     </div>
 
     <script>
@@ -390,8 +399,11 @@
         function renderOther(files) {
             const photoList = document.getElementById("photos-list");
             const videoList = document.getElementById("videos-list");
+            const pdfsList = document.getElementById("pdfs-list"); // Get new PDF list element
+
             photoList.innerHTML = '';
             videoList.innerHTML = '';
+            pdfsList.innerHTML = ''; // Clear PDF list too
 
             files.forEach(file => {
                 const ext = file.name.split('.').pop().toLowerCase();
@@ -425,6 +437,8 @@
                     photoList.appendChild(li);
                 } else if (["mp4", "mov", "webm"].includes(ext)) {
                     videoList.appendChild(li);
+                } else if (ext === "pdf") { // Condition to accept PDF files
+                    pdfsList.appendChild(li);
                 }
             });
         }
