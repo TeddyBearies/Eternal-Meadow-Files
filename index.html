@@ -107,17 +107,26 @@
             transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
-        .file-item {
+        .file-item { /* For audio items */
             background: var(--file-item-bg);
-            color: var(--text-color); /* Ensure file item text color adapts */
+            color: var(--text-color);
             padding: 0.5rem 1rem;
             margin: 0.3rem 0;
             border-radius: 6px;
             cursor: grab;
             display: flex;
+            flex-direction: column; /* Stack elements inside */
+            align-items: center; /* Center content horizontally */
+            transition: background-color 0.3s ease, color 0.3s ease;
+            text-align: center; /* Center text */
+        }
+
+        .file-item .file-name-wrapper { /* Wrapper for file name and copied message in audio items */
+            display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            width: 100%; /* Take full width of parent */
+            padding-top: 0.5rem; /* Space between preview and text */
         }
 
         ul {
@@ -127,17 +136,18 @@
             width: 100%;
         }
 
-        li {
+        li { /* For image, video, PDF items */
             background: var(--box-bg);
-            color: var(--text-color); /* Ensure list item text color adapts */
+            color: var(--text-color);
             margin: 0.5rem 0;
             padding: 1rem;
             border-radius: 8px;
             border: 1px solid var(--box-border);
             transition: box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column; /* Stack preview and name/copied */
+            align-items: center; /* Center content horizontally */
+            text-align: center; /* Center text */
         }
 
         li:hover {
@@ -149,6 +159,7 @@
             color: var(--accent-color);
             font-weight: 600;
             flex-grow: 1;
+            word-break: break-all; /* Prevent long names from overflowing */
         }
 
         .copied {
@@ -160,6 +171,38 @@
             display: none;
             margin-left: 10px;
         }
+
+        /* --- File Previews (New Styles) --- */
+        .file-preview {
+            max-width: 100%; /* Ensures previews don't overflow */
+            height: auto;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            display: block; /* Ensures it takes its own line */
+        }
+
+        .file-preview.audio-player { /* Specific styles for audio player */
+            width: 100%;
+            max-width: 250px; /* Limit audio player width */
+        }
+
+        .file-preview.img-preview { /* Specific styles for images */
+            max-height: 150px; /* Fixed height for image thumbnails */
+            width: auto;
+            object-fit: contain; /* Ensure image fits without cropping */
+        }
+
+        .file-preview.video-player { /* Specific styles for video player */
+            max-width: 100%;
+            max-height: 200px; /* Limit video player height */
+        }
+
+        .file-preview.pdf-viewer { /* Specific styles for PDF iframe */
+            width: 100%;
+            height: 200px; /* Default height for PDF viewer */
+            border: 1px solid var(--box-border); /* Add a border to PDF iframe */
+        }
+
 
         /* --- Top Right Buttons (Dark Mode & Layout) --- */
         .top-right-controls {
@@ -212,7 +255,7 @@
         /* Photos, Videos, & PDFs in Grid Layout */
         .layout-grid #photos-list,
         .layout-grid #videos-list,
-        .layout-grid #pdfs-list { /* Added #pdfs-list here */
+        .layout-grid #pdfs-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Responsive grid columns */
             gap: 1rem; /* Space between grid items */
@@ -220,17 +263,15 @@
 
         .layout-grid #photos-list li,
         .layout-grid #videos-list li,
-        .layout-grid #pdfs-list li { /* Added #pdfs-list li here */
-            flex-direction: column; /* Stack name and copied message vertically */
-            text-align: center;
+        .layout-grid #pdfs-list li {
+            /* Already flex-direction: column by default for preview stacking */
             padding: 0.8rem; /* Slightly less padding for denser grid */
             min-height: 100px; /* Ensure some height for smaller items */
         }
 
-        .layout-grid #photos-list li .file-name,
-        .layout-grid #videos-list li .file-name,
-        .layout-grid #pdfs-list li .file-name { /* Added for PDF file name */
-            margin-bottom: 0.5rem; /* Space between name and copied message */
+        /* Adjustments for preview elements within grid items */
+        .layout-grid li .file-name-wrapper {
+             padding-top: 0.3rem; /* Less padding in grid view */
         }
 
         /* Media Queries for Responsiveness */
@@ -352,7 +393,6 @@
             const allBox = document.getElementById("audio-pool");
             const duasBox = document.getElementById("duas-box");
             const fxBox = document.getElementById("soundfx-box");
-            // Clear boxes before re-rendering
             allBox.innerHTML = '';
             duasBox.innerHTML = '';
             fxBox.innerHTML = '';
@@ -364,15 +404,27 @@
                 item.draggable = true;
                 item.ondragstart = dragStart;
 
+                // Create audio player preview
+                const audioPlayer = document.createElement("audio");
+                audioPlayer.src = baseURL + file.name;
+                audioPlayer.controls = true;
+                audioPlayer.classList.add('file-preview', 'audio-player'); // Add general and specific preview classes
+                item.appendChild(audioPlayer);
+
+                // Wrapper for file name and copied message
+                const fileNameWrapper = document.createElement("div");
+                fileNameWrapper.className = "file-name-wrapper";
+                item.appendChild(fileNameWrapper);
+
                 const fileNameSpan = document.createElement("span");
                 fileNameSpan.className = "file-name";
                 fileNameSpan.textContent = decodeURIComponent(file.name);
-                item.appendChild(fileNameSpan);
+                fileNameWrapper.appendChild(fileNameSpan); // Append to wrapper
 
                 const copiedMessage = document.createElement("span");
                 copiedMessage.className = "copied";
                 copiedMessage.textContent = "Copied!";
-                item.appendChild(copiedMessage);
+                fileNameWrapper.appendChild(copiedMessage); // Append to wrapper
 
                 fileNameSpan.onclick = async () => {
                     try {
@@ -399,11 +451,11 @@
         function renderOther(files) {
             const photoList = document.getElementById("photos-list");
             const videoList = document.getElementById("videos-list");
-            const pdfsList = document.getElementById("pdfs-list"); // Get new PDF list element
+            const pdfsList = document.getElementById("pdfs-list");
 
             photoList.innerHTML = '';
             videoList.innerHTML = '';
-            pdfsList.innerHTML = ''; // Clear PDF list too
+            pdfsList.innerHTML = '';
 
             files.forEach(file => {
                 const ext = file.name.split('.').pop().toLowerCase();
@@ -411,15 +463,46 @@
                 const url = baseURL + file.name;
                 const li = document.createElement("li");
 
+                let previewElement;
+
+                // Create preview element based on file type
+                if (["jpg", "jpeg", "png", "gif", "webp"].includes(ext)) {
+                    previewElement = document.createElement("img");
+                    previewElement.src = url;
+                    previewElement.alt = name;
+                    previewElement.classList.add('img-preview');
+                } else if (["mp4", "mov", "webm"].includes(ext)) {
+                    previewElement = document.createElement("video");
+                    previewElement.src = url;
+                    previewElement.controls = true;
+                    previewElement.preload = "metadata";
+                    previewElement.classList.add('video-player');
+                } else if (ext === "pdf") {
+                    previewElement = document.createElement("iframe");
+                    previewElement.src = url;
+                    previewElement.setAttribute('frameborder', '0');
+                    previewElement.classList.add('pdf-viewer');
+                }
+
+                if (previewElement) {
+                    previewElement.classList.add('file-preview'); // Add common preview class
+                    li.appendChild(previewElement);
+                }
+
+                // Wrapper for file name and copied message
+                const nameWrapper = document.createElement("div");
+                nameWrapper.className = "file-name-wrapper"; // Reusing class for consistency
+                li.appendChild(nameWrapper);
+
                 const link = document.createElement("span");
                 link.className = "file-name";
                 link.textContent = name;
-                li.appendChild(link);
+                nameWrapper.appendChild(link); // Append to wrapper
 
                 const copied = document.createElement("span");
                 copied.className = "copied";
                 copied.textContent = "Copied!";
-                li.appendChild(copied);
+                nameWrapper.appendChild(copied); // Append to wrapper
 
                 link.onclick = async () => {
                     try {
@@ -437,7 +520,7 @@
                     photoList.appendChild(li);
                 } else if (["mp4", "mov", "webm"].includes(ext)) {
                     videoList.appendChild(li);
-                } else if (ext === "pdf") { // Condition to accept PDF files
+                } else if (ext === "pdf") {
                     pdfsList.appendChild(li);
                 }
             });
@@ -497,7 +580,6 @@
         if (savedLayout === 'grid') {
             document.body.classList.add('layout-grid');
         } else {
-            // Default to list if no preference or 'list' is saved
             document.body.classList.remove('layout-grid');
         }
     </script>
