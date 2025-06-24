@@ -4,35 +4,64 @@
     <meta charset="UTF-8">
     <title>Eternal Meadow Files</title>
     <style>
+        /* General Styles */
+        :root {
+            --bg-color: #f4f4f9; /* Light background */
+            --text-color: #333; /* Dark text */
+            --accent-color: #007acc; /* Link/interactive color */
+            --box-bg: #fff; /* Box background */
+            --box-border: #ccc; /* Box border */
+            --file-item-bg: #e6f7ff; /* File item background */
+            --copied-bg: #dff0d8; /* Copied message background */
+            --copied-color: #3c763d; /* Copied message color */
+        }
+
+        /* Dark Mode Styles */
+        .dark-mode {
+            --bg-color: #121212; /* Dark background */
+            --text-color: #eee; /* Light text */
+            --accent-color: #4dabf5; /* Lighter accent color for dark mode */
+            --box-bg: #212121; /* Darker box background */
+            --box-border: #555; /* Darker box border */
+            --file-item-bg: #333; /* Darker file item background */
+            --copied-bg: #388e3c; /* Darker copied message background */
+            --copied-color: #dff0d8; /* Lighter copied message color */
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: #f4f4f9;
-            color: #333;
+            background: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
             padding: 2rem;
             display: flex;
             flex-direction: column;
             align-items: center;
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for dark mode */
         }
+
         h1 {
             font-size: 2.5rem;
-            color: #2c3e50;
+            color: var(--accent-color);
             margin-bottom: 1rem;
         }
+
         h2 {
             margin-top: 2rem;
             font-size: 1.8rem;
-            color: #444;
+            color: #444; /* Keep a slightly darker color for headings */
             border-bottom: 2px solid #ddd;
             padding-bottom: 0.3rem;
             width: 100%;
             max-width: 800px;
         }
+
         .section {
             max-width: 800px;
             width: 100%;
             margin-bottom: 2rem;
         }
+
         .instructions {
             font-size: 0.9rem;
             background: #fff8dc;
@@ -41,58 +70,85 @@
             border-radius: 6px;
             margin-bottom: 1.5rem;
         }
+
         .box {
             min-height: 100px;
-            border: 2px dashed #ccc;
+            border: 2px dashed var(--box-border);
             border-radius: 8px;
             padding: 1rem;
             margin-bottom: 1rem;
-            background: #fff;
+            background: var(--box-bg);
+            transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transition for dark mode */
         }
+
         .file-item {
-            background: #e6f7ff;
+            background: var(--file-item-bg);
             padding: 0.5rem 1rem;
             margin: 0.3rem 0;
             border-radius: 6px;
             cursor: grab;
-            display: flex; /* Added for layout of text and copied message */
-            justify-content: space-between; /* Added for layout of text and copied message */
-            align-items: center; /* Added for layout of text and copied message */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease; /* Smooth transition for dark mode */
         }
+
         ul {
             list-style: none;
             padding: 0;
             max-width: 800px;
             width: 100%;
         }
+
         li {
-            background: #fff;
+            background: var(--box-bg);
             margin: 0.5rem 0;
             padding: 1rem;
             border-radius: 8px;
-            border: 1px solid #ddd;
-            transition: box-shadow 0.3s ease;
+            border: 1px solid var(--box-border);
+            transition: box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease; /* Smooth transition for dark mode */
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
+
         li:hover {
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Slightly stronger shadow */
         }
+
         .file-name {
             cursor: pointer;
-            color: #007acc;
+            color: var(--accent-color);
             font-weight: 600;
-            flex-grow: 1; /* Allows it to take available space */
+            flex-grow: 1;
         }
+
         .copied {
-            background: #dff0d8;
-            color: #3c763d;
+            background: var(--copied-bg);
+            color: var(--copied-color);
             padding: 4px 8px;
             border-radius: 4px;
             font-size: 0.8rem;
-            display: none; /* Initially hidden */
-            margin-left: 10px; /* Space between name and message */
+            display: none;
+            margin-left: 10px;
+        }
+
+        /* Dark Mode Toggle Button */
+        #darkModeToggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            background: #666; /* Darker background for the button */
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth transition for hover */
+        }
+
+        #darkModeToggle:hover {
+            background: #888; /* Slightly lighter on hover */
         }
     </style>
 </head>
@@ -130,6 +186,8 @@
         <h2>🎞️ Video Clips</h2>
         <ul id="videos-list"></ul>
     </div>
+
+    <button id="darkModeToggle">Dark Mode</button>
 
     <script>
         const repoAPI = "https://api.github.com/repos/TeddyBearies/Eternal-Meadow-Files/contents/";
@@ -275,6 +333,20 @@
                 // Optionally display an error message to the user on the page
                 document.body.insertAdjacentHTML('beforeend', `<p style="color: red;">Error loading files: ${error.message}. Please try again later.</p>`);
             });
+
+        // Dark Mode Toggle Functionality
+        const darkModeToggle = document.getElementById('darkModeToggle');
+
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            // Store user preference in localStorage
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        });
+
+        // Check for saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
     </script>
 </body>
 </html>
