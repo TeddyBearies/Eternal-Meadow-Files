@@ -4,30 +4,48 @@
     <meta charset="UTF-8">
     <title>Eternal Meadow Files</title>
     <style>
-        /* General Styles */
+        /* --- CSS Variables for Theming --- */
         :root {
-            --bg-color: #f4f4f9; /* Light background */
-            --text-color: #333; /* Dark text */
-            --accent-color: #007acc; /* Link/interactive color */
-            --box-bg: #fff; /* Box background */
-            --box-border: #ccc; /* Box border */
-            --file-item-bg: #e6f7ff; /* File item background */
-            --copied-bg: #dff0d8; /* Copied message background */
-            --copied-color: #3c763d; /* Copied message color */
+            /* Light Mode Defaults */
+            --bg-color: #f4f4f9;
+            --text-color: #333;
+            --header-color: #2c3e50; /* For H1 */
+            --sub-header-color: #444; /* For H2 */
+            --accent-color: #007acc; /* Links, active elements */
+            --box-bg: #fff;
+            --box-border: #ddd;
+            --file-item-bg: #e6f7ff;
+            --copied-bg: #dff0d8;
+            --copied-color: #3c763d;
+            --instructions-bg: #fff8dc;
+            --instructions-border: #ccc;
+            --instructions-text: #333;
+            --button-bg: #666;
+            --button-text: #fff;
+            --button-hover-bg: #888;
         }
 
-        /* Dark Mode Styles */
+        /* --- Dark Mode Styles --- */
         .dark-mode {
-            --bg-color: #121212; /* Dark background */
-            --text-color: #eee; /* Light text */
-            --accent-color: #4dabf5; /* Lighter accent color for dark mode */
-            --box-bg: #212121; /* Darker box background */
-            --box-border: #555; /* Darker box border */
-            --file-item-bg: #333; /* Darker file item background */
-            --copied-bg: #388e3c; /* Darker copied message background */
-            --copied-color: #dff0d8; /* Lighter copied message color */
+            --bg-color: #1a1a1a; /* Deeper dark background */
+            --text-color: #e0e0e0; /* Lighter text for contrast */
+            --header-color: #4dabf5; /* Bright accent for main title */
+            --sub-header-color: #bbbbbb; /* Lighter sub-headers */
+            --accent-color: #7bdff2; /* Vibrant accent for links/interactive */
+            --box-bg: #2b2b2b; /* Darker box background */
+            --box-border: #444; /* Subtle dark border */
+            --file-item-bg: #3a3a3a; /* Darker file item background */
+            --copied-bg: #28a745; /* Green for copied */
+            --copied-color: #e0e0e0; /* White text on copied */
+            --instructions-bg: #4a4a4a; /* Dark background for instructions */
+            --instructions-border: #666; /* Matching border */
+            --instructions-text: #e0e0e0; /* Light text for instructions */
+            --button-bg: #555;
+            --button-text: #fff;
+            --button-hover-bg: #777;
         }
 
+        /* --- Base Layout & Typography --- */
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
             background: var(--bg-color);
@@ -37,23 +55,28 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for dark mode */
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh; /* Ensure body takes full height */
         }
 
         h1 {
             font-size: 2.5rem;
-            color: var(--accent-color);
+            color: var(--header-color);
             margin-bottom: 1rem;
+            text-align: center;
+            transition: color 0.3s ease;
         }
 
         h2 {
             margin-top: 2rem;
             font-size: 1.8rem;
-            color: #444; /* Keep a slightly darker color for headings */
-            border-bottom: 2px solid #ddd;
+            color: var(--sub-header-color);
+            border-bottom: 2px solid var(--box-border);
             padding-bottom: 0.3rem;
             width: 100%;
             max-width: 800px;
+            text-align: left; /* Align headers left within their max-width */
+            transition: color 0.3s ease, border-color 0.3s ease;
         }
 
         .section {
@@ -64,13 +87,16 @@
 
         .instructions {
             font-size: 0.9rem;
-            background: #fff8dc;
+            background: var(--instructions-bg);
+            color: var(--instructions-text);
             padding: 1rem;
-            border: 1px solid #ccc;
+            border: 1px solid var(--instructions-border);
             border-radius: 6px;
             margin-bottom: 1.5rem;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
+        /* --- Box & Item Styles --- */
         .box {
             min-height: 100px;
             border: 2px dashed var(--box-border);
@@ -78,11 +104,12 @@
             padding: 1rem;
             margin-bottom: 1rem;
             background: var(--box-bg);
-            transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transition for dark mode */
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .file-item {
             background: var(--file-item-bg);
+            color: var(--text-color); /* Ensure file item text color adapts */
             padding: 0.5rem 1rem;
             margin: 0.3rem 0;
             border-radius: 6px;
@@ -90,7 +117,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: background-color 0.3s ease; /* Smooth transition for dark mode */
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         ul {
@@ -102,18 +129,19 @@
 
         li {
             background: var(--box-bg);
+            color: var(--text-color); /* Ensure list item text color adapts */
             margin: 0.5rem 0;
             padding: 1rem;
             border-radius: 8px;
             border: 1px solid var(--box-border);
-            transition: box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease; /* Smooth transition for dark mode */
+            transition: box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         li:hover {
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Slightly stronger shadow */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         .file-name {
@@ -133,26 +161,120 @@
             margin-left: 10px;
         }
 
-        /* Dark Mode Toggle Button */
-        #darkModeToggle {
+        /* --- Top Right Buttons (Dark Mode & Layout) --- */
+        .top-right-controls {
             position: fixed;
             top: 1rem;
             right: 1rem;
+            display: flex; /* Arrange buttons in a row */
+            gap: 0.5rem; /* Space between buttons */
+            z-index: 1000; /* Ensure buttons are on top */
+        }
+
+        .top-right-controls button {
             padding: 0.5rem 1rem;
-            background: #666; /* Darker background for the button */
-            color: #fff;
+            background: var(--button-bg);
+            color: var(--button-text);
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            transition: background-color 0.3s ease; /* Smooth transition for hover */
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-size: 0.9rem;
         }
 
-        #darkModeToggle:hover {
-            background: #888; /* Slightly lighter on hover */
+        .top-right-controls button:hover {
+            background: var(--button-hover-bg);
+        }
+
+        /* --- Layout Specific Styles --- */
+
+        /* Wrapper for Audio Boxes to allow Flexbox */
+        #audio-sections-wrapper {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column; /* Default: stacked */
+            gap: 1.5rem; /* Space between the audio boxes */
+        }
+
+        /* Grid Layout Mode */
+        .layout-grid #audio-sections-wrapper {
+            flex-direction: row; /* Audio boxes become horizontal */
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            justify-content: center; /* Center boxes if not full row */
+        }
+
+        .layout-grid #audio-sections-wrapper .box {
+            flex: 1 1 calc(33.33% - 1.5rem); /* Roughly 3 columns, accounting for gap */
+            min-width: 280px; /* Minimum width for each box */
+        }
+
+        /* Photos & Videos in Grid Layout */
+        .layout-grid #photos-list,
+        .layout-grid #videos-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Responsive grid columns */
+            gap: 1rem; /* Space between grid items */
+        }
+
+        .layout-grid #photos-list li,
+        .layout-grid #videos-list li {
+            flex-direction: column; /* Stack name and copied message vertically */
+            text-align: center;
+            padding: 0.8rem; /* Slightly less padding for denser grid */
+            min-height: 100px; /* Ensure some height for smaller items */
+        }
+
+        .layout-grid #photos-list li .file-name,
+        .layout-grid #videos-list li .file-name {
+            margin-bottom: 0.5rem; /* Space between name and copied message */
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+            .section {
+                margin-bottom: 1.5rem;
+            }
+            .top-right-controls {
+                flex-direction: column; /* Stack buttons on smaller screens */
+                gap: 0.3rem;
+                top: 0.5rem;
+                right: 0.5rem;
+            }
+
+            .layout-grid #audio-sections-wrapper {
+                flex-direction: column; /* Stack audio boxes on small screens even in grid mode */
+                align-items: center;
+            }
+            .layout-grid #audio-sections-wrapper .box {
+                flex: 1 1 100%; /* Full width */
+                min-width: unset;
+                max-width: 400px; /* Limit width even if full screen */
+            }
+
+            .layout-grid #photos-list,
+            .layout-grid #videos-list {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* Smaller grid items */
+            }
         }
     </style>
 </head>
 <body>
+    <div class="top-right-controls">
+        <button id="listLayoutToggle">List View</button>
+        <button id="gridLayoutToggle">Grid View</button>
+        <button id="darkModeToggle">Dark Mode</button>
+    </div>
+
     <h1>Eternal Meadow Files</h1>
 
     <div class="instructions">
@@ -167,16 +289,17 @@
         <div id="audio-pool" class="box"></div>
     </div>
 
-    <div class="section">
-        <h2>🤲 Duas</h2>
-        <div id="duas-box" class="box" ondrop="drop(event, 'duas')" ondragover="allowDrop(event)"></div>
-    </div>
+    <div id="audio-sections-wrapper">
+        <div class="section">
+            <h2>🤲 Duas</h2>
+            <div id="duas-box" class="box" ondrop="drop(event, 'duas')" ondragover="allowDrop(event)"></div>
+        </div>
 
-    <div class="section">
-        <h2>🔊 Sound Effects</h2>
-        <div id="soundfx-box" class="box" ondrop="drop(event, 'soundfx')" ondragover="allowDrop(event)"></div>
+        <div class="section">
+            <h2>🔊 Sound Effects</h2>
+            <div id="soundfx-box" class="box" ondrop="drop(event, 'soundfx')" ondragover="allowDrop(event)"></div>
+        </div>
     </div>
-
     <div class="section">
         <h2>🖼️ Photo Gallery</h2>
         <ul id="photos-list"></ul>
@@ -187,14 +310,13 @@
         <ul id="videos-list"></ul>
     </div>
 
-    <button id="darkModeToggle">Dark Mode</button>
-
     <script>
         const repoAPI = "https://api.github.com/repos/TeddyBearies/Eternal-Meadow-Files/contents/";
         const baseURL = "https://teddybearies.github.io/Eternal-Meadow-Files/";
         let categories = JSON.parse(localStorage.getItem('audioCategories') || '{"duas": [], "soundfx": []}');
         let audioFiles = [];
 
+        // --- Drag & Drop Functions ---
         function allowDrop(e) {
             e.preventDefault();
         }
@@ -216,6 +338,7 @@
             e.dataTransfer.setData("text", e.target.id);
         }
 
+        // --- Render Functions ---
         function renderAudio() {
             const allBox = document.getElementById("audio-pool");
             const duasBox = document.getElementById("duas-box");
@@ -228,7 +351,7 @@
             audioFiles.forEach(file => {
                 const item = document.createElement("div");
                 item.className = "file-item";
-                item.id = file.name; // Use file.name as ID for drag/drop data
+                item.id = file.name;
                 item.draggable = true;
                 item.ondragstart = dragStart;
 
@@ -242,21 +365,18 @@
                 copiedMessage.textContent = "Copied!";
                 item.appendChild(copiedMessage);
 
-                // Click handler for copying URL
                 fileNameSpan.onclick = async () => {
                     try {
                         await navigator.clipboard.writeText(baseURL + file.name);
-                        copiedMessage.style.display = 'inline'; // Show message
+                        copiedMessage.style.display = 'inline';
                         setTimeout(() => {
-                            copiedMessage.style.display = 'none'; // Hide after delay
-                        }, 1500); // 1.5 seconds
+                            copiedMessage.style.display = 'none';
+                        }, 1500);
                     } catch (err) {
                         console.error('Failed to copy audio URL: ', err);
-                        // Optionally: alert user or show a temporary error message
                     }
                 };
 
-                // Place item into its correct category
                 if (categories.duas.includes(file.name)) {
                     duasBox.appendChild(item);
                 } else if (categories.soundfx.includes(file.name)) {
@@ -270,7 +390,6 @@
         function renderOther(files) {
             const photoList = document.getElementById("photos-list");
             const videoList = document.getElementById("videos-list");
-            // Clear lists before re-rendering (important if this function could be called multiple times)
             photoList.innerHTML = '';
             videoList.innerHTML = '';
 
@@ -290,17 +409,15 @@
                 copied.textContent = "Copied!";
                 li.appendChild(copied);
 
-                // Click handler for copying URL
                 link.onclick = async () => {
                     try {
                         await navigator.clipboard.writeText(url);
-                        copied.style.display = 'inline'; // Show message
+                        copied.style.display = 'inline';
                         setTimeout(() => {
-                            copied.style.display = 'none'; // Hide after delay
-                        }, 1500); // 1.5 seconds
+                            copied.style.display = 'none';
+                        }, 1500);
                     } catch (err) {
                         console.error('Failed to copy file URL: ', err);
-                        // Optionally: alert user or show a temporary error message
                     }
                 };
 
@@ -312,7 +429,7 @@
             });
         }
 
-        // Fetch files from GitHub API and initialize rendering
+        // --- Initial Data Fetch ---
         fetch(repoAPI)
             .then(res => {
                 if (!res.ok) {
@@ -321,31 +438,53 @@
                 return res.json();
             })
             .then(files => {
-                // Filter audio files (MP3s) for categorization
                 audioFiles = files.filter(f => f.name.toLowerCase().endsWith(".mp3"));
-                renderAudio(); // Render audio files based on saved categories
-
-                // Render other media types (photos, videos)
+                renderAudio();
                 renderOther(files);
             })
             .catch(error => {
                 console.error("Error fetching repository contents:", error);
-                // Optionally display an error message to the user on the page
                 document.body.insertAdjacentHTML('beforeend', `<p style="color: red;">Error loading files: ${error.message}. Please try again later.</p>`);
             });
 
-        // Dark Mode Toggle Functionality
+        // --- Dark Mode Toggle ---
         const darkModeToggle = document.getElementById('darkModeToggle');
-
         darkModeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            // Store user preference in localStorage
-            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+            const isDarkMode = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+            darkModeToggle.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
         });
 
-        // Check for saved dark mode preference
-        if (localStorage.getItem('darkMode') === 'true') {
+        // Apply dark mode on load if preferred
+        const savedDarkMode = localStorage.getItem('darkMode');
+        if (savedDarkMode === 'true') {
             document.body.classList.add('dark-mode');
+            darkModeToggle.textContent = 'Light Mode';
+        } else {
+            darkModeToggle.textContent = 'Dark Mode';
+        }
+
+        // --- Layout Toggles ---
+        const listLayoutToggle = document.getElementById('listLayoutToggle');
+        const gridLayoutToggle = document.getElementById('gridLayoutToggle');
+
+        listLayoutToggle.addEventListener('click', () => {
+            document.body.classList.remove('layout-grid');
+            localStorage.setItem('layout', 'list');
+        });
+
+        gridLayoutToggle.addEventListener('click', () => {
+            document.body.classList.add('layout-grid');
+            localStorage.setItem('layout', 'grid');
+        });
+
+        // Apply saved layout on load
+        const savedLayout = localStorage.getItem('layout');
+        if (savedLayout === 'grid') {
+            document.body.classList.add('layout-grid');
+        } else {
+            // Default to list if no preference or 'list' is saved
+            document.body.classList.remove('layout-grid');
         }
     </script>
 </body>
